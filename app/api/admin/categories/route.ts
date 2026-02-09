@@ -3,8 +3,12 @@ import Category from "@/models/Category";
 import requireAdmin from "@/lib/middleware/role";
 import { ok, error, serverError } from "@/lib/api";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const auth = requireAdmin(req);
+    if (!auth.ok) {
+      return error(auth.message, auth.status);
+    }
     await dbConnect();
     const categories = await Category.find({});
     return ok("Categories fetched successfully", { categories });

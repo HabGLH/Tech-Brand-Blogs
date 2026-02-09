@@ -9,6 +9,10 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const auth = requireAdmin(req);
+    if (!auth.ok) {
+      return error(auth.message, auth.status);
+    }
     const id = (await params)?.id ?? getIdFromRequest(req);
     if (!id) return error("Category id is required", 400);
     await dbConnect();
