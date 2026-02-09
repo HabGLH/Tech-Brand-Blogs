@@ -19,12 +19,10 @@ export const signAccessToken = (payload: CustomJwtPayload): string => {
 export const getRoleCode = (role: unknown): number =>
   role === "admin" ? 777 : 555;
 
-export const buildAccessTokenPayload = (user: {
-  _id: { toString(): string } | string;
-  email: string;
-  role?: unknown;
-}): CustomJwtPayload => ({
-  userId: typeof user._id === "string" ? user._id : user._id.toString(),
+import { IUser } from "@/types/user";
+
+export const buildAccessTokenPayload = (user: IUser): CustomJwtPayload => ({
+  userId: user._id.toString(),
   email: user.email,
   role: getRoleCode(user.role),
 });

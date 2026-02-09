@@ -1,49 +1,50 @@
-import { NextResponse as res } from "next/server";
 import { cookies } from "next/headers";
-import { buildAccessTokenPayload, signAccessToken, hashToken } from "@/lib/auth";
+import {
+  buildAccessTokenPayload,
+  signAccessToken,
+  hashToken,
+  generateOpaqueToken,
+} from "@/lib/auth";
 import RefreshToken from "@/models/RefreshToken";
 import User from "@/models/User";
 import dbConnect from "@/lib/db";
+import { ok, error, serverError } from "@/lib/api";
 
-export async function POST() {
+export async function POST(req: Request) {
   try {
     const refreshToken = (await cookies()).get("refreshToken")?.value;
-    if (!refreshToken) {
-      return res.json(
-        { status: "error", message: "No refresh token found" },
-        { status: 400 },
-      );
-    }
+    if (!refreshToken) return error("No refresh token found", 400);
     await dbConnect();
     const storedToken = await RefreshToken.findOne({
-      token: hashToken(refreshToken),
+      tokenHash: hashToken(refreshToken),
     });
-    if (!storedToken) {
-      return res.json(
-        { status: "error", message: "Invalid refresh token" },
-        { status: 401 },
-      );
-    }
+    if (!storedToken) return error("Invalid refresh token", 401);
     const user = await User.findById(storedToken.userId);
-    if (!user) {
-      return res.json(
-        { status: "error", message: "User not found" },
-        { status: 404 },
-      );
+    if (!user) return error("User not found", 404);
+    if (user.isBlocked) {
+      await storedToken.deleteOne();
+      return error("User is blocked", 403);
     }
     const accessToken = signAccessToken(buildAccessTokenPayload(user));
-    return res.json({
-      status: "success",
-      message: "Token refreshed",
-      data: { accessToken },
+    const refreshTokenExpires =
+      Number(process.env.REFRESH_TOKEN_EXPIRES) || 14;
+    const newRefreshToken = generateOpaqueToken();
+    storedToken.tokenHash = hashToken(newRefreshToken);
+    storedToken.expiresAt = new Date(
+      Date.now() + refreshTokenExpires * 24 * 60 * 60 * 1000,
+    );
+    await storedToken.save();
+    const cookieStore = await cookies();
+    cookieStore.set("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: refreshTokenExpires * 24 * 60 * 60,
+    });
+    return ok("Token refreshed", {
+      accessToken,
+      refreshToken: newRefreshToken,
     });
   } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "error refreshing token";
-    console.log("Refresh token error:", errorMessage);
-    return res.json(
-      { status: "error", message: "Server error" },
-      { status: 500 },
-    );
+    return serverError("Refresh token error:", error);
   }
 }

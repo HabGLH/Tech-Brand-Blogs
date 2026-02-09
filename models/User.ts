@@ -10,14 +10,12 @@ const userSchema = new mongoose.Schema(
       unique: true,
       index: true,
     },
-    password: { type: String, required: true },
+    passwordHash: { type: String, required: true, select: false },
     role: { type: String, enum: ["user", "admin"], default: "user" },
     isBlocked: { type: Boolean, default: false },
-    isActive: { type: Boolean, default: true },
-    images: { type: [String], default: [] },
   },
   { timestamps: true },
 );
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.models?.User || mongoose.model("User", userSchema);
 export default User;

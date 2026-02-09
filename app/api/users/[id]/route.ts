@@ -1,7 +1,8 @@
-import { NextResponse as res } from "next/server";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
 import requireAuth from "@/lib/middleware/authe";
+import { hash } from "bcryptjs";
+import { ok, error, serverError } from "@/lib/api";
 
 export async function GET(
   req: Request,
@@ -9,47 +10,21 @@ export async function GET(
 ) {
   try {
     const id = (await params)?.id ?? new URL(req.url).searchParams.get("id");
-    if (!id) {
-      return res.json(
-        { status: "error", message: "User id is required" },
-        { status: 400 },
-      );
-    }
+    if (!id) return error("User id is required", 400);
     const auth = requireAuth(req);
     if (!auth.ok) {
-      return res.json(
-        { status: "error", message: auth.message },
-        { status: auth.status },
-      );
+      return error(auth.message, auth.status);
     }
     //user get only their own data or admin can get any user data
     if (auth.user?.userId !== id && auth.user?.role !== 777) {
-      return res.json(
-        { status: "error", message: "Forbidden" },
-        { status: 403 },
-      );
+      return error("Forbidden", 403);
     }
     await dbConnect();
-    const user = await User.findById(id).select("-password");
-    if (!user) {
-      return res.json(
-        { status: "error", message: "User not found" },
-        { status: 404 },
-      );
-    }
-    return res.json({
-      status: "success",
-      message: "User fetched successfully",
-      data: { user },
-    });
+    const user = await User.findById(id).select("-passwordHash");
+    if (!user) return error("User not found", 404);
+    return ok("User fetched successfully", { user });
   } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "error fetching user";
-    console.error("Error fetching user:", errorMessage);
-    return res.json(
-      { status: "error", message: "Server error" },
-      { status: 500 },
-    );
+    return serverError("Error fetching user:", error);
   }
 }
 
@@ -59,57 +34,32 @@ export async function PUT(
 ) {
   try {
     const id = (await params)?.id ?? new URL(req.url).searchParams.get("id");
-    if (!id) {
-      return res.json(
-        { status: "error", message: "User id is required" },
-        { status: 400 },
-      );
-    }
+    if (!id) return error("User id is required", 400);
     const auth = requireAuth(req);
     if (!auth.ok) {
-      return res.json(
-        { status: "error", message: auth.message },
-        { status: auth.status },
-      );
+      return error(auth.message, auth.status);
     }
     if (auth.user?.userId !== id && auth.user?.role !== 777) {
-      return res.json(
-        { status: "error", message: "Forbidden" },
-        { status: 403 },
-      );
+      return error("Forbidden", 403);
     }
     const body = await req.json();
     if (auth.user?.role !== 777) {
       if (body.role || body.password) {
-        return res.json(
-          { status: "error", message: "Forbidden" },
-          { status: 403 },
-        );
+        return error("Forbidden", 403);
       }
+    }
+    if (body.password) {
+      body.passwordHash = await hash(body.password, 10);
+      delete body.password;
     }
     await dbConnect();
     const updatedUser = await User.findByIdAndUpdate(id, body, {
       new: true,
-    }).select("-password");
-    if (!updatedUser) {
-      return res.json(
-        { status: "error", message: "User not found" },
-        { status: 404 },
-      );
-    }
-    return res.json({
-      status: "success",
-      message: "User updated successfully",
-      data: { user: updatedUser },
-    });
+    }).select("-passwordHash");
+    if (!updatedUser) return error("User not found", 404);
+    return ok("User updated successfully", { user: updatedUser });
   } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "error updating user";
-    console.error("Error updating user:", errorMessage);
-    return res.json(
-      { status: "error", message: "Server error" },
-      { status: 500 },
-    );
+    return serverError("Error updating user:", error);
   }
 }
 
@@ -119,45 +69,21 @@ export async function DELETE(
 ) {
   try {
     const id = (await params)?.id ?? new URL(req.url).searchParams.get("id");
-    if (!id) {
-      return res.json(
-        { status: "error", message: "User id is required" },
-        { status: 400 },
-      );
-    }
+    if (!id) return error("User id is required", 400);
     const auth = requireAuth(req);
     if (!auth.ok) {
-      return res.json(
-        { status: "error", message: auth.message },
-        { status: auth.status },
-      );
+      return error(auth.message, auth.status);
     }
     if (auth.user?.userId !== id && auth.user?.role !== 777) {
-      return res.json(
-        { status: "error", message: "Forbidden" },
-        { status: 403 },
-      );
+      return error("Forbidden", 403);
     }
     await dbConnect();
-    const deletedUser = await User.findByIdAndDelete(id).select("-password");
-    if (!deletedUser) {
-      return res.json(
-        { status: "error", message: "User not found" },
-        { status: 404 },
-      );
-    }
-    return res.json({
-      status: "success",
-      message: "User deleted successfully",
-      data: { user: deletedUser },
-    });
-  } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "error deleting user";
-    console.error("Error deleting user:", errorMessage);
-    return res.json(
-      { status: "error", message: "Server error" },
-      { status: 500 },
+    const deletedUser = await User.findByIdAndDelete(id).select(
+      "-passwordHash",
     );
+    if (!deletedUser) return error("User not found", 404);
+    return ok("User deleted successfully", { user: deletedUser });
+  } catch (error: unknown) {
+    return serverError("Error deleting user:", error);
   }
 }

@@ -1,73 +1,35 @@
-import { NextResponse as res } from "next/server";
-import dbConnect from "@/lib/db";
 import User from "@/models/User";
 import requireAdmin from "@/lib/middleware/role";
+import { hash } from "bcryptjs";
+import { ok, error } from "@/lib/api";
+import { createHandler } from "@/lib/api-handler";
 
-export async function GET(req: Request) {
-  try {
-    const auth = requireAdmin(req);
-    if (!auth.ok) {
-      return res.json(
-        { status: "error", message: auth.message },
-        { status: auth.status },
-      );
-    }
-    await dbConnect();
-    const users = await User.find({}).select("-password");
-    return res.json({
-      status: "success",
-      message: "Users fetched successfully",
-      data: { users },
-    });
-  } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "error fetching users";
-    console.error("Error fetching users:", errorMessage);
-    return res.json(
-      { status: "error", message: "Server error" },
-      { status: 500 },
-    );
+export const GET = createHandler(async (req: Request) => {
+  const auth = requireAdmin(req);
+  if (!auth.ok) {
+    return error(auth.message, auth.status);
   }
-}
+  const users = await User.find({}).select("-passwordHash");
+  return ok("Users fetched successfully", { users });
+});
 
-export async function POST(req: Request) {
-  try {
-    const auth = requireAdmin(req);
-    if (!auth.ok) {
-      return res.json(
-        { status: "error", message: auth.message },
-        { status: auth.status },
-      );
-    }
-    const body = await req.json();
-    if (!body.email || !body.password || !body.name) {
-      return res.json(
-        { status: "error", message: "Email, password, and name are required" },
-        { status: 400 },
-      );
-    }
-    await dbConnect();
-    const existingUser = await User.findOne({ email: body.email });
-    if (existingUser) {
-      return res.json(
-        { status: "error", message: "Email already in use" },
-        { status: 409 },
-      );
-    }
-    const newUser = new User(body);
-    await newUser.save();
-    return res.json({
-      status: "success",
-      message: "User created successfully",
-      data: { user: newUser },
-    });
-  } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "error creating user";
-    console.error("Error creating user:", errorMessage);
-    return res.json(
-      { status: "error", message: "Server error" },
-      { status: 500 },
-    );
+export const POST = createHandler(async (req: Request) => {
+  const auth = requireAdmin(req);
+  if (!auth.ok) {
+    return error(auth.message, auth.status);
   }
-}
+  const body = await req.json();
+  if (!body.email || !body.password || !body.name) {
+    return error("Email, password, and name are required", 400);
+  }
+  const existingUser = await User.findOne({ email: body.email });
+  if (existingUser) return error("Email already in use", 409);
+  const passwordHash = await hash(body.password, 10);
+  const newUser = new User({
+    ...body,
+    passwordHash,
+  });
+  await newUser.save();
+  const safeUser = await User.findById(newUser._id).select("-passwordHash");
+  return ok("User created successfully", { user: safeUser }, 201);
+});
