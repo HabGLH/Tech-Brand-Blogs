@@ -1,6 +1,7 @@
 import { randomBytes, createHash } from "crypto";
 import jwt from "jsonwebtoken";
 import { CustomJwtPayload } from "@/types/custom";
+import { IUser } from "@/types";
 
 export const hashToken = (token: string) => {
   return createHash("sha256").update(token).digest("hex");
@@ -18,8 +19,6 @@ export const signAccessToken = (payload: CustomJwtPayload): string => {
 
 export const getRoleCode = (role: unknown): number =>
   role === "admin" ? 777 : 555;
-
-import { IUser } from "@/types/user";
 
 export const buildAccessTokenPayload = (user: IUser): CustomJwtPayload => ({
   userId: user._id.toString(),

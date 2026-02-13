@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ApiResponse } from "@/types/api";
+import { ApiResponse } from "@/types";
 
 type ApiData = Record<string, unknown> | unknown;
 
@@ -18,8 +18,8 @@ export const ok = <T extends ApiData>(
   );
 
 export const error = (message: string, status = 400) =>
-  NextResponse.json<ApiResponse>(
-    { status: "error", message },
+  NextResponse.json<ApiResponse<null>>(
+    { status: "error", message } as ApiResponse<null>,
     { status },
   );
 
