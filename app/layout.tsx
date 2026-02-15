@@ -19,20 +19,18 @@ export const metadata: Metadata = {
     "A simple blog app built with Next.js 13, TypeScript, and Tailwind CSS.",
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <RootLayoutWrapper>
-          {children}
-        </RootLayoutWrapper>
+        <RootLayoutWrapper>{children}</RootLayoutWrapper>
       </body>
     </html>
   );

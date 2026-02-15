@@ -3,6 +3,7 @@ import User from "@/models/User";
 import requireAuth from "@/lib/middleware/authe";
 import { hash } from "bcryptjs";
 import { ok, error, serverError } from "@/lib/api";
+import { deleteUserAndRelatedData } from "@/lib/user-cleanup";
 
 export async function GET(
   req: Request,
@@ -42,18 +43,47 @@ export async function PUT(
     if (auth.user?.userId !== id && auth.user?.role !== 777) {
       return error("Forbidden", 403);
     }
+    await dbConnect();
     const body = await req.json();
-    if (auth.user?.role !== 777) {
-      if (body.role || body.password) {
-        return error("Forbidden", 403);
+    const updatePayload: Record<string, unknown> = {};
+
+    if (typeof body.name === "string") {
+      updatePayload.name = body.name.trim();
+    }
+
+    if (typeof body.email === "string") {
+      const normalizedEmail = body.email.trim().toLowerCase();
+      const existingEmail = await User.findOne({
+        email: normalizedEmail,
+        _id: { $ne: id },
+      }).select("_id");
+      if (existingEmail) {
+        return error("Email already in use", 409);
+      }
+      updatePayload.email = normalizedEmail;
+    }
+
+    if (auth.user?.role === 777) {
+      if (body.role && ["user", "admin"].includes(body.role)) {
+        updatePayload.role = body.role;
+      }
+      if (typeof body.isBlocked === "boolean") {
+        updatePayload.isBlocked = body.isBlocked;
       }
     }
+
     if (body.password) {
-      body.passwordHash = await hash(body.password, 10);
-      delete body.password;
+      if (auth.user?.role !== 777 && auth.user?.userId !== id) {
+        return error("Forbidden", 403);
+      }
+      updatePayload.passwordHash = await hash(body.password, 10);
     }
-    await dbConnect();
-    const updatedUser = await User.findByIdAndUpdate(id, body, {
+
+    if (!Object.keys(updatePayload).length) {
+      return error("No valid fields provided for update", 400);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, updatePayload, {
       new: true,
     }).select("-passwordHash");
     if (!updatedUser) return error("User not found", 404);
@@ -78,9 +108,7 @@ export async function DELETE(
       return error("Forbidden", 403);
     }
     await dbConnect();
-    const deletedUser = await User.findByIdAndDelete(id).select(
-      "-passwordHash",
-    );
+    const deletedUser = await deleteUserAndRelatedData(id);
     if (!deletedUser) return error("User not found", 404);
     return ok("User deleted successfully", { user: deletedUser });
   } catch (error: unknown) {

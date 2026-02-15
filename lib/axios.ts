@@ -33,9 +33,12 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const requestUrl = originalRequest?.url ?? "";
+    const isAuthEndpoint = ["/auth/login", "/auth/register", "/auth/refresh", "/auth/logout"]
+      .some((path) => requestUrl.includes(path));
 
     // If 401 and not already retrying
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
       originalRequest._retry = true;
 
       try {
@@ -49,11 +52,11 @@ axiosInstance.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         
         return axiosInstance(originalRequest);
-      } catch (refreshError) {
+      } catch {
         // Refresh token failed or expired
         setAccessToken(null);
-        // User should be redirected to login (handled by middleware or global state)
-        return Promise.reject(refreshError);
+        // Keep original request error details for UI.
+        return Promise.reject(error);
       }
     }
 

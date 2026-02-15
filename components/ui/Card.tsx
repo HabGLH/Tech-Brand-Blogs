@@ -28,15 +28,15 @@ const Card: React.FC<CardProps> = ({
     <div
       onClick={onClick}
       className={`
-        bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm transition-all duration-300
-        ${hover ? "hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1" : ""}
+        bg-[rgb(var(--surface))] rounded-2xl border border-[rgb(var(--border))] shadow-sm transition-all duration-300
+        ${hover ? "hover:shadow-xl hover:shadow-[rgb(var(--accent)/0.15)] hover:-translate-y-1" : ""}
         ${onClick ? "cursor-pointer active:scale-[0.99]" : ""}
         ${paddings[padding]}
         ${className}
       `}
     >
       {title && (
-        <h3 className="text-lg font-black text-gray-900 dark:text-white mb-4">
+        <h3 className="text-lg font-black text-[rgb(var(--text-primary))] mb-4">
           {title}
         </h3>
       )}

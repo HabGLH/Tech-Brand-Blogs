@@ -12,46 +12,46 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full space-y-2">
         {label && (
-          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 transition-colors">
+          <label className="block text-sm font-semibold text-[rgb(var(--text-primary))] transition-colors">
             {label}
           </label>
         )}
         <div className="relative group">
           {leftIcon && (
-            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[rgb(var(--text-muted))] group-focus-within:text-[rgb(var(--accent))] transition-colors">
               {leftIcon}
             </div>
           )}
           <input
             ref={ref}
             className={`
-              w-full px-4 py-3 bg-white dark:bg-gray-900 border rounded-xl shadow-sm outline-none transition-all duration-200
+              w-full px-4 py-3 bg-[rgb(var(--surface))] border border-[rgb(var(--border))] rounded-xl shadow-sm outline-none transition-all duration-200
               ${leftIcon ? "pl-11" : ""}
               ${rightIcon ? "pr-11" : ""}
               ${
                 error
-                  ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-100 dark:focus:ring-red-900/20"
-                  : "border-gray-200 dark:border-gray-800 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/10"
+                  ? "border-[rgb(var(--secondary))] focus:border-[rgb(var(--secondary))] focus:ring-2 focus:ring-[rgb(var(--secondary-soft)/0.35)]"
+                  : "focus:border-[rgb(var(--accent))] focus:ring-4 focus:ring-[rgb(var(--accent-soft)/0.25)]"
               }
-              dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600
+              text-[rgb(var(--text-primary))] placeholder:text-[rgb(var(--text-muted))]
               ${className}
             `}
             {...props}
           />
           {rightIcon && (
-            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors">
+            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[rgb(var(--text-muted))] group-focus-within:text-[rgb(var(--accent))] transition-colors">
               {rightIcon}
             </div>
           )}
         </div>
         {error && (
-          <p className="text-xs font-medium text-red-500 animate-in fade-in slide-in-from-top-1">
+          <p className="text-xs font-medium text-[rgb(var(--secondary))] animate-in fade-in slide-in-from-top-1">
             {error}
           </p>
         )}
       </div>
     );
-  }
+  },
 );
 
 Input.displayName = "Input";

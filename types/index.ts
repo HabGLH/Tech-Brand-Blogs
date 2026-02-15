@@ -1,7 +1,7 @@
 /**
  * API Response Interfaces
  */
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   status: "success" | "error";
   message: string;
   data: T;
@@ -31,6 +31,11 @@ export interface User {
   email: string;
   role: "user" | "admin";
   isBlocked: boolean;
+  bio?: string;
+  location?: string;
+  website?: string;
+  twitter?: string;
+  linkedin?: string;
   avatarUrl?: string;
   createdAt: string;
   updatedAt: string;
@@ -63,6 +68,35 @@ export interface Tag {
   slug: string;
 }
 
+export interface SiteSettingsLink {
+  label: string;
+  href: string;
+}
+
+export interface HomeSettings {
+  badge: string;
+  title: string;
+  subtitle: string;
+  primaryCtaLabel: string;
+  primaryCtaHref: string;
+  secondaryCtaLabel: string;
+  secondaryCtaHref: string;
+}
+
+export interface FooterSettings {
+  brandName: string;
+  description: string;
+  companyLinks: SiteSettingsLink[];
+  supportLinks: SiteSettingsLink[];
+  legalLinks: SiteSettingsLink[];
+  copyrightText: string;
+}
+
+export interface SiteSettingsData {
+  home: HomeSettings;
+  footer: FooterSettings;
+}
+
 export interface Post {
   _id: string;
   title: string;
@@ -75,6 +109,7 @@ export interface Post {
   status: "draft" | "published";
   likesCount: number;
   commentsCount: number;
+  likedByViewer?: boolean;
   createdAt: string;
   updatedAt: string;
 }

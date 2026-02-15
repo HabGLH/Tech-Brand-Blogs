@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/db";
 import Category from "@/models/Category";
 import requireAdmin from "@/lib/middleware/role";
+import { slugify } from "@/lib/utils";
 import { ok, error, serverError } from "@/lib/api";
 
 export async function GET(req: Request) {
@@ -24,11 +25,19 @@ export async function POST(req: Request) {
       return error(auth.message, auth.status);
     }
     const body = await req.json();
-    if (!body.name || !body.slug) {
-      return error("Category name and slug are required", 400);
-    }
+    const name = typeof body.name === "string" ? body.name.trim() : "";
+    const slugInput =
+      typeof body.slug === "string" && body.slug.trim() ? body.slug : name;
+    const slug = slugify(slugInput);
+
+    if (!name) return error("Category name is required", 400);
+    if (!slug) return error("Invalid category slug", 400);
+
     await dbConnect();
-    const newCategory = new Category(body);
+    const existingCategory = await Category.findOne({ slug }).select("_id");
+    if (existingCategory) return error("Category slug already exists", 409);
+
+    const newCategory = new Category({ name, slug });
     await newCategory.save();
     return ok("Category created successfully", { category: newCategory }, 201);
   } catch (error: unknown) {

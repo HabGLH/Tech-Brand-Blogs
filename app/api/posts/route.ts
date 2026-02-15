@@ -1,5 +1,6 @@
 import Post from "@/models/Post";
 import User from "@/models/User";
+import Like from "@/models/Like";
 import requireAuth from "@/lib/middleware/authe";
 import { getUserFromRequest } from "@/lib/auth";
 import { slugify } from "@/lib/utils";
@@ -84,13 +85,33 @@ export const GET = createHandler(async (req: Request) => {
 
   const [posts, total] = await Promise.all([
     Post.find(finalFilter)
+      .populate("authorId", "name avatarUrl bio")
+      .populate("categoryId", "name slug")
       .sort(sort)
       .skip((page - 1) * limit)
-      .limit(limit),
+      .limit(limit)
+      .lean(),
     Post.countDocuments(finalFilter),
   ]);
+
+  let likedPostIds = new Set<string>();
+  if (user?.userId && posts.length > 0) {
+    const likes = await Like.find({
+      userId: user.userId,
+      postId: { $in: posts.map((post) => post._id) },
+    })
+      .select("postId")
+      .lean();
+    likedPostIds = new Set(likes.map((like) => like.postId.toString()));
+  }
+
+  const postsWithViewerMeta = posts.map((post) => ({
+    ...post,
+    likedByViewer: likedPostIds.has(post._id.toString()),
+  }));
+
   return ok("Posts fetched successfully", {
-    posts,
+    posts: postsWithViewerMeta,
     pagination: {
       page,
       limit,

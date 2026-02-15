@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/db";
 import Category from "@/models/Category";
 import requireAdmin from "@/lib/middleware/role";
-import { getIdFromRequest } from "@/lib/utils";
+import { getIdFromRequest, slugify } from "@/lib/utils";
 import { ok, error, serverError } from "@/lib/api";
 
 export async function GET(
@@ -37,7 +37,30 @@ export async function PUT(
     const id = (await params)?.id ?? getIdFromRequest(req);
     if (!id) return error("Category id is required", 400);
     await dbConnect();
-    const updatedCategory = await Category.findByIdAndUpdate(id, body, {
+
+    const updatePayload: Record<string, unknown> = {};
+    if (typeof body.name === "string") {
+      updatePayload.name = body.name.trim();
+    }
+    if (body.slug !== undefined || updatePayload.name) {
+      const baseSlug =
+        typeof body.slug === "string" && body.slug.trim()
+          ? body.slug
+          : String(updatePayload.name ?? "");
+      const normalizedSlug = slugify(baseSlug);
+      if (!normalizedSlug) return error("Invalid category slug", 400);
+      const existingCategory = await Category.findOne({
+        slug: normalizedSlug,
+        _id: { $ne: id },
+      }).select("_id");
+      if (existingCategory) return error("Category slug already exists", 409);
+      updatePayload.slug = normalizedSlug;
+    }
+    if (!Object.keys(updatePayload).length) {
+      return error("No valid fields provided for update", 400);
+    }
+
+    const updatedCategory = await Category.findByIdAndUpdate(id, updatePayload, {
       new: true,
     });
     if (!updatedCategory) return error("Category not found", 404);

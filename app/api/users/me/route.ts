@@ -30,7 +30,41 @@ export async function PUT(req: Request) {
       return error("Forbidden", 403);
     }
     await dbConnect();
-    const updatedUser = await User.findByIdAndUpdate(auth.user.userId, body, {
+    const updatePayload: Record<string, unknown> = {};
+    if (typeof body.name === "string") {
+      updatePayload.name = body.name.trim();
+    }
+    if (typeof body.email === "string") {
+      const normalizedEmail = body.email.trim().toLowerCase();
+      const existingUser = await User.findOne({
+        email: normalizedEmail,
+        _id: { $ne: auth.user.userId },
+      }).select("_id");
+      if (existingUser) return error("Email already in use", 409);
+      updatePayload.email = normalizedEmail;
+    }
+    if (typeof body.bio === "string") {
+      updatePayload.bio = body.bio.trim().slice(0, 500);
+    }
+    if (typeof body.location === "string") {
+      updatePayload.location = body.location.trim().slice(0, 120);
+    }
+    if (typeof body.website === "string") {
+      updatePayload.website = body.website.trim().slice(0, 200);
+    }
+    if (typeof body.twitter === "string") {
+      updatePayload.twitter = body.twitter.trim().slice(0, 120);
+    }
+    if (typeof body.linkedin === "string") {
+      updatePayload.linkedin = body.linkedin.trim().slice(0, 120);
+    }
+    if (typeof body.avatarUrl === "string") {
+      updatePayload.avatarUrl = body.avatarUrl.trim().slice(0, 500);
+    }
+    if (!Object.keys(updatePayload).length) {
+      return error("No valid fields provided for update", 400);
+    }
+    const updatedUser = await User.findByIdAndUpdate(auth.user.userId, updatePayload, {
       new: true,
     }).select("-passwordHash");
     if (!updatedUser) return error("User not found", 404);

@@ -19,14 +19,24 @@ export const POST = createHandler(async (req: Request) => {
     return error(auth.message, auth.status);
   }
   const body = await req.json();
-  if (!body.email || !body.password || !body.name) {
+  const name = typeof body.name === "string" ? body.name.trim() : "";
+  const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+  const password = typeof body.password === "string" ? body.password : "";
+
+  if (!email || !password || !name) {
     return error("Email, password, and name are required", 400);
   }
-  const existingUser = await User.findOne({ email: body.email });
+
+  const role = body.role === "admin" ? "admin" : "user";
+  const existingUser = await User.findOne({ email });
   if (existingUser) return error("Email already in use", 409);
-  const passwordHash = await hash(body.password, 10);
+  const passwordHash = await hash(password, 10);
+
   const newUser = new User({
-    ...body,
+    name,
+    email,
+    role,
+    isBlocked: Boolean(body.isBlocked),
     passwordHash,
   });
   await newUser.save();

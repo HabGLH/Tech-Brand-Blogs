@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const mongoose = require("mongoose");
 
 const slugify = (text) =>
@@ -12,7 +12,6 @@ async function ensureUniqueSlug(posts, baseSlug, postId) {
   if (!baseSlug) return "";
   let slug = baseSlug;
   let i = 2;
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const existing = await posts.findOne({
       slug,
@@ -42,20 +41,14 @@ async function run() {
   // Users: password -> passwordHash
   const userResult = await users.updateMany(
     { password: { $exists: true }, passwordHash: { $exists: false } },
-    [
-      { $set: { passwordHash: "$password" } },
-      { $unset: "password" },
-    ],
+    [{ $set: { passwordHash: "$password" } }, { $unset: "password" }],
   );
   console.log("Users migrated:", userResult.modifiedCount);
 
   // Refresh tokens: token -> tokenHash
   const tokenResult = await refreshTokens.updateMany(
     { token: { $exists: true }, tokenHash: { $exists: false } },
-    [
-      { $set: { tokenHash: "$token" } },
-      { $unset: "token" },
-    ],
+    [{ $set: { tokenHash: "$token" } }, { $unset: "token" }],
   );
   console.log("Refresh tokens migrated:", tokenResult.modifiedCount);
 
@@ -69,7 +62,8 @@ async function run() {
     const updates = {};
     const unsets = {};
 
-    const hasSlug = typeof post.slug === "string" && post.slug.trim().length > 0;
+    const hasSlug =
+      typeof post.slug === "string" && post.slug.trim().length > 0;
     if (!hasSlug) {
       const baseSlug = slugify(post.title);
       if (baseSlug) {

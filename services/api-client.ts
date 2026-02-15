@@ -1,5 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
+const ACCESS_TOKEN_STORAGE_KEY = "accessToken";
+
 const apiClient = axios.create({
   baseURL: "/api",
   headers: {
@@ -8,15 +10,37 @@ const apiClient = axios.create({
   withCredentials: true,
 });
 
-// We'll manage the access token in memory for security
 let accessToken: string | null = null;
+
+const canUseStorage = () => typeof window !== "undefined";
+
+const readStoredAccessToken = (): string | null => {
+  if (!canUseStorage()) return null;
+  return localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
+};
 
 export const setAccessToken = (token: string | null) => {
   accessToken = token;
+  if (!canUseStorage()) return;
+  if (token) {
+    localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, token);
+  } else {
+    localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+  }
+};
+
+export const getAccessToken = (): string | null => accessToken;
+
+export const hydrateAccessToken = () => {
+  if (accessToken) return;
+  accessToken = readStoredAccessToken();
 };
 
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    if (!accessToken) {
+      hydrateAccessToken();
+    }
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
@@ -29,9 +53,12 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const requestUrl = originalRequest?.url ?? "";
+    const isAuthEndpoint = ["/auth/login", "/auth/register", "/auth/refresh", "/auth/logout"]
+      .some((path) => requestUrl.includes(path));
 
-    // Handle 401 Unauthorized via Refresh Token
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Handle 401 Unauthorized via Refresh Token for protected endpoints only.
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
       originalRequest._retry = true;
 
       try {
@@ -43,10 +70,10 @@ apiClient.interceptors.response.use(
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
           return apiClient(originalRequest);
         }
-      } catch (refreshError) {
+      } catch {
         setAccessToken(null);
-        // On refresh failure, we expect the UI/Store to handle the redirect to login
-        return Promise.reject(refreshError);
+        // Preserve the original endpoint error so UI doesn't show refresh-specific messages.
+        return Promise.reject(error);
       }
     }
 

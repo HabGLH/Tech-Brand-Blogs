@@ -15,6 +15,14 @@ export async function PUT(
     const { id } = await params;
     if (!id) return error("User id is required", 400);
     await dbConnect();
+    if (auth.user.userId === id) {
+      return error("You cannot block your own account", 400);
+    }
+    const targetUser = await User.findById(id).select("role");
+    if (!targetUser) return error("User not found", 404);
+    if (targetUser.role === "admin") {
+      return error("Admin accounts cannot be blocked", 400);
+    }
     const user = await User.findByIdAndUpdate(
       id,
       { isBlocked: true },

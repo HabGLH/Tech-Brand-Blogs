@@ -50,9 +50,5 @@ export const POST = createHandler(async (req: Request) => {
     maxAge: refreshTokenExpires * 24 * 60 * 60,
   });
 
-  return ok(
-    "User registered successfully",
-    { accessToken, refreshToken },
-    201,
-  );
+  return ok("User registered successfully", { accessToken, refreshToken }, 201);
 });

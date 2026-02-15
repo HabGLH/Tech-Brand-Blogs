@@ -1,26 +1,98 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Default mode choice: light (better readability with gold as primary CTA). */
+  --primary: 212 175 55; /* #D4AF37 */
+  --primary-strong: 184 147 35;
+  --secondary: 236 72 153; /* #EC4899 */
+  --secondary-soft: 249 168 212;
+  --accent: 37 99 235; /* #2563EB */
+  --accent-soft: 147 197 253;
+
+  --background: 250 247 241;
+  --surface: 255 255 255;
+  --surface-elevated: 247 244 237;
+  --text-primary: 24 24 27;
+  --text-muted: 82 82 91;
+  --border: 228 223 212;
+  --on-primary: 18 18 18;
+  --ring: var(--accent);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-primary: rgb(var(--primary));
+  --color-secondary: rgb(var(--secondary));
+  --color-accent: rgb(var(--accent));
+  --color-background: rgb(var(--background));
+  --color-surface: rgb(var(--surface));
+  --color-text-primary: rgb(var(--text-primary));
+  --color-text-muted: rgb(var(--text-muted));
+  --color-border: rgb(var(--border));
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
+html.dark {
+  --primary: 227 194 89;
+  --primary-strong: 212 175 55;
+  --secondary: 219 95 156;
+  --secondary-soft: 156 94 132;
+  --accent: 96 140 224;
+  --accent-soft: 88 112 163;
+
+  --background: 12 18 31;
+  --surface: 22 30 48;
+  --surface-elevated: 31 40 61;
+  --text-primary: 241 245 249;
+  --text-muted: 165 180 204;
+  --border: 55 65 91;
+  --on-primary: 28 26 19;
+  --ring: var(--accent);
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  html:not(.light):not(.dark) {
+    --primary: 227 194 89;
+    --primary-strong: 212 175 55;
+    --secondary: 219 95 156;
+    --secondary-soft: 156 94 132;
+    --accent: 96 140 224;
+    --accent-soft: 88 112 163;
+    --background: 12 18 31;
+    --surface: 22 30 48;
+    --surface-elevated: 31 40 61;
+    --text-primary: 241 245 249;
+    --text-muted: 165 180 204;
+    --border: 55 65 91;
+    --on-primary: 28 26 19;
+    --ring: var(--accent);
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: rgb(var(--background));
+  color: rgb(var(--text-primary));
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+input,
+textarea,
+select {
+  color: rgb(var(--text-primary));
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgb(var(--text-muted));
+  opacity: 1;
+}
+
+* {
+  border-color: rgb(var(--border));
+}
+
+::selection {
+  background: rgb(var(--secondary-soft) / 0.45);
+  color: rgb(var(--text-primary));
 }

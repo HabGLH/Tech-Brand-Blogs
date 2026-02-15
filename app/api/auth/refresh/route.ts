@@ -10,7 +10,7 @@ import User from "@/models/User";
 import dbConnect from "@/lib/db";
 import { ok, error, serverError } from "@/lib/api";
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
     const refreshToken = (await cookies()).get("refreshToken")?.value;
     if (!refreshToken) return error("No refresh token found", 400);

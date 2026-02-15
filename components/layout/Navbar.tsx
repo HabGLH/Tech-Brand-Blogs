@@ -1,164 +1,415 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import {
+  ChevronDown,
+  FileText,
+  Home,
+  LayoutDashboard,
+  Link2,
+  LogOut,
+  Menu,
+  Moon,
+  PlusCircle,
+  Sun,
+  UserCircle2,
+  X,
+} from "lucide-react";
 import { useAuthStore } from "@/store/auth-store";
+import { authService } from "@/services/auth-service";
+import { useTheme } from "@/hooks/use-theme";
 import Button from "@/components/ui/Button";
-import { Menu, X, LogOut, LayoutDashboard, PlusCircle, Search } from "lucide-react";
 
 const Navbar = () => {
   const pathname = usePathname();
-  const { isAuthenticated, logout, isHydrated } = useAuthStore();
+  const { isAuthenticated, isHydrated, logout, user } = useAuthStore();
+  const { isDark, toggleTheme } = useTheme();
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement | null>(null);
+
+  const isAdmin = user?.role === "admin";
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 12);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    const onClickOutside = (event: MouseEvent) => {
+      if (!profileRef.current) return;
+      if (!profileRef.current.contains(event.target as Node)) {
+        setIsProfileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+    } catch {
+      // Ignore request errors and continue local logout.
+    } finally {
+      logout();
+      setIsMobileMenuOpen(false);
+      setIsProfileMenuOpen(false);
+    }
+  };
+
   const navLinks = [
-    { name: "Home", href: "/" },
+    { name: "Home", href: "/", icon: Home },
+    { name: "Posts", href: "/posts", icon: FileText },
+    { name: "Links", href: "/links", icon: Link2 },
+    ...(isAuthenticated
+      ? [{ name: "Create Post", href: "/create-post", icon: PlusCircle }]
+      : []),
   ];
 
-  if (!isHydrated) return null;
+  if (!isHydrated) {
+    return null;
+  }
 
   return (
-    <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled 
-          ? "bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 py-3" 
-          : "bg-transparent py-5"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-8">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/30 group-hover:scale-105 transition-transform">
-                <span className="text-xl font-bold">B</span>
-              </div>
-              <span className="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-linear-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
-                Blogly
-              </span>
-            </Link>
-
-            <div className="hidden md:flex items-center gap-6">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`text-sm font-semibold transition-colors ${
-                    pathname === link.href 
-                      ? "text-blue-600" 
-                      : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div>
+    <>
+      <nav
+        className={`fixed top-0 z-50 w-full transition-all duration-300 ${
+          isScrolled
+            ? "border-b border-[rgb(var(--border))] bg-[rgb(var(--surface))/0.94] py-3 backdrop-blur-lg"
+            : "bg-transparent py-4"
+        }`}
+      >
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <div className="md:hidden">
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="rounded-xl p-2 text-[rgb(var(--text-muted))] transition-colors hover:bg-[rgb(var(--surface-elevated))]"
+              aria-label="Open menu"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
           </div>
 
-          <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" size="sm" className="rounded-full">
-              <Search className="w-4 h-4" />
-            </Button>
+          <Link href="/" className="group flex items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[rgb(var(--primary))] text-[rgb(var(--on-primary))] shadow-lg shadow-[rgb(var(--primary)/0.3)]">
+              <span className="text-xl font-black">B</span>
+            </div>
+            <span className="hidden bg-linear-to-r from-[rgb(var(--text-primary))] to-[rgb(var(--text-muted))] bg-clip-text text-2xl font-black tracking-tight text-transparent sm:block">
+              Blogly
+            </span>
+          </Link>
 
+          <div className="hidden items-center gap-6 md:flex">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-sm font-semibold transition-colors ${
+                  pathname === link.href
+                    ? "text-[rgb(var(--accent))]"
+                    : "text-[rgb(var(--text-muted))] hover:text-[rgb(var(--secondary))]"
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+
+          <div className="relative" ref={profileRef}>
             {isAuthenticated ? (
-              <div className="flex items-center gap-3 ml-2 border-l border-gray-100 dark:border-gray-800 pl-6">
-                <Link href="/posts/create">
-                  <Button size="sm" variant="outline" leftIcon={<PlusCircle className="w-4 h-4" />}>
-                    Write
-                  </Button>
-                </Link>
-                <div className="flex items-center gap-2">
-                  <Link href="/admin">
-                    <div className="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 hover:text-blue-600 cursor-pointer transition-colors border border-gray-200 dark:border-gray-700">
-                      <LayoutDashboard className="w-4 h-4" />
-                    </div>
-                  </Link>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={logout}
-                    className="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10"
-                  >
-                    <LogOut className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
+              <button
+                type="button"
+                onClick={() => setIsProfileMenuOpen((prev) => !prev)}
+                className="flex items-center gap-2 rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-3 py-1.5 text-sm font-semibold text-[rgb(var(--text-primary))] transition-colors hover:border-[rgb(var(--accent-soft))] hover:text-[rgb(var(--accent))]"
+              >
+                <UserCircle2 className="h-4 w-4" />
+                <span className="hidden max-w-24 truncate sm:block">
+                  {user?.name ?? "Profile"}
+                </span>
+                <ChevronDown className="h-3.5 w-3.5" />
+              </button>
             ) : (
               <div className="flex items-center gap-2">
-                <Link href="/login">
-                  <Button variant="ghost" size="sm">Log in</Button>
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  className="rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--surface))] p-2 text-[rgb(var(--text-primary))] hover:text-[rgb(var(--secondary))]"
+                  aria-label="Toggle theme"
+                >
+                  {isDark ? (
+                    <Sun className="h-4 w-4" />
+                  ) : (
+                    <Moon className="h-4 w-4" />
+                  )}
+                </button>
+                <Link href="/login" className="hidden sm:block">
+                  <Button variant="ghost" size="sm">
+                    Log in
+                  </Button>
                 </Link>
                 <Link href="/register">
                   <Button size="sm">Get Started</Button>
                 </Link>
               </div>
             )}
-          </div>
 
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            {isAuthenticated && isProfileMenuOpen && (
+              <div className="absolute right-0 top-12 min-w-72 rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--surface))] p-3 shadow-xl">
+                <div className="mb-2 rounded-xl bg-[rgb(var(--surface-elevated))] p-3">
+                  <p className="font-bold text-[rgb(var(--text-primary))]">
+                    {user?.name}
+                  </p>
+                  <p className="text-xs capitalize text-[rgb(var(--text-muted))]">
+                    {user?.role}
+                  </p>
+                  {user?.bio && (
+                    <p className="mt-2 line-clamp-2 text-xs text-[rgb(var(--text-muted))]">
+                      {user.bio}
+                    </p>
+                  )}
+                </div>
+
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[rgb(var(--text-primary))] hover:bg-[rgb(var(--surface-elevated))] hover:text-[rgb(var(--secondary))]"
+                    onClick={() => setIsProfileMenuOpen(false)}
+                  >
+                    <LayoutDashboard className="h-4 w-4" />
+                    Admin Dashboard
+                  </Link>
+                )}
+
+                <Link
+                  href={`/users/${user?._id}`}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[rgb(var(--text-primary))] hover:bg-[rgb(var(--surface-elevated))] hover:text-[rgb(var(--secondary))]"
+                  onClick={() => setIsProfileMenuOpen(false)}
+                >
+                  <UserCircle2 className="h-4 w-4" />
+                  Public Profile
+                </Link>
+
+                <Link
+                  href="/profile"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[rgb(var(--text-primary))] hover:bg-[rgb(var(--surface-elevated))] hover:text-[rgb(var(--secondary))]"
+                  onClick={() => setIsProfileMenuOpen(false)}
+                >
+                  <UserCircle2 className="h-4 w-4" />
+                  Edit Profile
+                </Link>
+
+                <Link
+                  href="/my-posts"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[rgb(var(--text-primary))] hover:bg-[rgb(var(--surface-elevated))] hover:text-[rgb(var(--secondary))]"
+                  onClick={() => setIsProfileMenuOpen(false)}
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  My Posts
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[rgb(var(--text-primary))] hover:bg-[rgb(var(--surface-elevated))] hover:text-[rgb(var(--secondary))]"
+                >
+                  {isDark ? (
+                    <Sun className="h-4 w-4" />
+                  ) : (
+                    <Moon className="h-4 w-4" />
+                  )}
+                  {isDark ? "Light Mode" : "Dark Mode"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[rgb(var(--secondary))] hover:bg-[rgb(var(--secondary-soft)/0.18)]"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      </nav>
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800 animate-in fade-in slide-in-from-top-2">
-          <div className="px-4 py-6 space-y-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div
+            className="absolute inset-0 bg-[rgb(var(--text-primary)/0.35)] backdrop-blur-sm"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+
+          <aside className="absolute left-0 top-0 h-full w-80 max-w-[90%] border-r border-[rgb(var(--border))] bg-[rgb(var(--surface))] p-5 shadow-2xl">
+            <div className="mb-6 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[rgb(var(--primary))] font-black text-[rgb(var(--on-primary))]">
+                  B
+                </div>
+                <span className="text-xl font-black text-[rgb(var(--text-primary))]">
+                  Menu
+                </span>
+              </div>
+              <button
+                type="button"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg font-bold text-gray-900 dark:text-white"
+                className="rounded-lg p-2 text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-elevated))]"
+                aria-label="Close menu"
               >
-                {link.name}
-              </Link>
-            ))}
-            <div className="pt-4 border-t border-gray-50 dark:border-gray-900 flex flex-col gap-3">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {isAuthenticated && (
+              <div className="mb-6 rounded-xl bg-[rgb(var(--surface-elevated))] p-3">
+                <p className="font-bold text-[rgb(var(--text-primary))]">
+                  {user?.name}
+                </p>
+                <p className="text-xs capitalize text-[rgb(var(--text-muted))]">
+                  {user?.role}
+                </p>
+                {user?.bio && (
+                  <p className="mt-1 line-clamp-2 text-xs text-[rgb(var(--text-muted))]">
+                    {user.bio}
+                  </p>
+                )}
+              </div>
+            )}
+
+            <nav className="space-y-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition-colors ${
+                    pathname === link.href
+                      ? "bg-[rgb(var(--accent))] text-[rgb(var(--on-primary))]"
+                      : "text-[rgb(var(--text-primary))] hover:bg-[rgb(var(--surface-elevated))] hover:text-[rgb(var(--secondary))]"
+                  }`}
+                >
+                  <link.icon className="h-4 w-4" />
+                  {link.name}
+                </Link>
+              ))}
+            </nav>
+
+            <div className="mt-6 space-y-2 border-t border-[rgb(var(--border))] pt-4">
               {isAuthenticated ? (
                 <>
-                  <Link href="/posts/create" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button className="w-full" leftIcon={<PlusCircle className="w-4 h-4" />}>
-                      Create Post
+                  <Link
+                    href={`/users/${user?._id}`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      leftIcon={<UserCircle2 className="h-4 w-4" />}
+                    >
+                      Public Profile
                     </Button>
                   </Link>
-                  <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full" leftIcon={<LayoutDashboard className="w-4 h-4" />}>
-                      Dashboard
+                  <Link
+                    href="/profile"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      leftIcon={<UserCircle2 className="h-4 w-4" />}
+                    >
+                      Edit Profile
                     </Button>
                   </Link>
-                  <Button variant="ghost" className="w-full text-red-500" onClick={() => { logout(); setIsMobileMenuOpen(false); }}>
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                        leftIcon={<LayoutDashboard className="h-4 w-4" />}
+                      >
+                        Admin
+                      </Button>
+                    </Link>
+                  )}
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={toggleTheme}
+                    leftIcon={
+                      isDark ? (
+                        <Sun className="h-4 w-4" />
+                      ) : (
+                        <Moon className="h-4 w-4" />
+                      )
+                    }
+                  >
+                    {isDark ? "Light Mode" : "Dark Mode"}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="w-full text-[rgb(var(--secondary))]"
+                    onClick={handleLogout}
+                  >
                     Log Out
                   </Button>
                 </>
               ) : (
                 <>
-                  <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full">Log in</Button>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={toggleTheme}
+                    leftIcon={
+                      isDark ? (
+                        <Sun className="h-4 w-4" />
+                      ) : (
+                        <Moon className="h-4 w-4" />
+                      )
+                    }
+                  >
+                    {isDark ? "Light Mode" : "Dark Mode"}
+                  </Button>
+                  <Link
+                    href="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Button variant="outline" className="w-full">
+                      Log in
+                    </Button>
                   </Link>
-                  <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link
+                    href="/register"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
                     <Button className="w-full">Get Started</Button>
                   </Link>
                 </>
               )}
             </div>
-          </div>
+          </aside>
         </div>
       )}
-    </nav>
+    </>
   );
 };
 

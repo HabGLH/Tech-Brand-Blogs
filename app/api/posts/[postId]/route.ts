@@ -29,7 +29,22 @@ export async function GET(req: Request, { params }: { params: params }) {
     ) {
       return error("Forbidden.", 403);
     }
-    return ok("Post fetched successfully.", { post });
+
+    let likedByViewer = false;
+    if (viewer?.userId) {
+      const existingLike = await Like.findOne({
+        postId: post._id,
+        userId: viewer.userId,
+      }).select("_id");
+      likedByViewer = Boolean(existingLike);
+    }
+
+    return ok("Post fetched successfully.", {
+      post: {
+        ...post.toObject(),
+        likedByViewer,
+      },
+    });
   } catch (error: unknown) {
     return serverError("Failed to fetch post:", error);
   }
@@ -46,8 +61,8 @@ export async function PUT(req: Request, { params }: { params: params }) {
     await dbConnect();
     const post = await Post.findById(postId);
     if (!post) return error("Post not found.", 404);
-    if (post.authorId.toString() !== auth.user.userId && auth.user.role !== 777) {
-      return error("Unauthorized.", 403);
+    if (post.authorId.toString() !== auth.user.userId) {
+      return error("Only the post author can edit this post.", 403);
     }
     if (body.status && !["draft", "published"].includes(body.status)) {
       return error("Invalid status value.", 400);
