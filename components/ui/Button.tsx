@@ -28,11 +28,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       primary:
         "bg-[rgb(var(--primary))] text-[rgb(var(--on-primary))] hover:bg-[rgb(var(--primary-strong))] shadow-md hover:shadow-lg hover:shadow-[rgb(var(--primary)/0.25)]",
       secondary:
-        "bg-[rgb(var(--surface-elevated))] text-[rgb(var(--text-primary))] border border-[rgb(var(--border))] hover:border-[rgb(var(--secondary-soft))] hover:text-[rgb(var(--secondary))]",
+        "bg-[rgb(var(--surface-elevated))] text-[rgb(var(--text-primary))] border border-[rgb(var(--border))] hover:border-[rgb(var(--primary)/0.35)] hover:text-[rgb(var(--primary-strong))]",
       danger:
-        "bg-[rgb(var(--secondary))] text-[rgb(var(--on-primary))] hover:bg-[rgb(var(--secondary-soft))] hover:text-[rgb(var(--text-primary))] shadow-md hover:shadow-lg hover:shadow-[rgb(var(--secondary)/0.25)]",
+        "bg-[rgb(var(--secondary))] text-[rgb(var(--on-danger))] hover:bg-[rgb(var(--secondary-strong))] shadow-md hover:shadow-lg hover:shadow-[rgb(var(--secondary)/0.25)]",
       ghost:
-        "bg-transparent text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-elevated))] hover:text-[rgb(var(--secondary))]",
+        "bg-transparent text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-elevated))] hover:text-[rgb(var(--text-primary))]",
       outline:
         "bg-transparent border-2 border-[rgb(var(--border))] text-[rgb(var(--text-primary))] hover:border-[rgb(var(--accent-soft))] hover:text-[rgb(var(--accent))] hover:bg-[rgb(var(--surface-elevated))]",
     };

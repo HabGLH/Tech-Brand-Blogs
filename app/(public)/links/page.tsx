@@ -93,12 +93,12 @@ export default function LinksPage() {
         {" "}
         <Badge
           variant="info"
-          className="mb-4 uppercase tracking-widest text-[10px] font-black"
+          className="mb-4 uppercase tracking-wide text-[10px] font-bold"
         >
           {" "}
           Quick Navigation{" "}
         </Badge>{" "}
-        <h1 className="mb-2 text-4xl font-black text-[rgb(var(--text-primary))]">
+        <h1 className="mb-2 text-4xl font-bold text-[rgb(var(--text-primary))]">
           Links
         </h1>{" "}
         <p className="text-[rgb(var(--text-muted))]">
@@ -118,7 +118,7 @@ export default function LinksPage() {
           {groups.map((group) => (
             <Card key={group.title}>
               {" "}
-              <div className="mb-4 inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest text-[rgb(var(--text-muted))]">
+              <div className="mb-4 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-[rgb(var(--text-muted))]">
                 {" "}
                 {group.icon} {group.title}{" "}
               </div>{" "}
@@ -134,7 +134,7 @@ export default function LinksPage() {
           ))}{" "}
           <Card className="md:col-span-2">
             {" "}
-            <div className="mb-4 inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest text-[rgb(var(--text-muted))]">
+            <div className="mb-4 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-[rgb(var(--text-muted))]">
               {" "}
               <ShieldCheck className="h-4 w-4 text-[rgb(var(--accent))]" />{" "}
               Developer Resources{" "}
@@ -151,3 +151,4 @@ export default function LinksPage() {
     </div>
   );
 }
+

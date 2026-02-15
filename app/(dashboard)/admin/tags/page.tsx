@@ -82,7 +82,7 @@ export default function AdminTagsPage() {
       {" "}
       <div>
         {" "}
-        <h1 className="text-3xl font-black text-[rgb(var(--text-primary))]">
+        <h1 className="text-3xl font-bold text-[rgb(var(--text-primary))]">
           Manage Tags
         </h1>{" "}
         <p className="text-[rgb(var(--text-muted))]">
@@ -124,11 +124,11 @@ export default function AdminTagsPage() {
         {" "}
         <div className="overflow-x-auto">
           {" "}
-          <table className="w-full border-collapse text-left">
+          <table className="w-full min-w-[640px] border-collapse text-left">
             {" "}
             <thead>
               {" "}
-              <tr className="border-b border-[rgb(var(--border))] bg-[rgb(var(--surface-elevated))] text-[11px] font-black uppercase tracking-widest text-[rgb(var(--text-muted))] ">
+              <tr className="border-b border-[rgb(var(--border))] bg-[rgb(var(--surface-elevated))] text-[11px] font-bold uppercase tracking-wide text-[rgb(var(--text-muted))] ">
                 {" "}
                 <th className="px-5 py-4">Name</th>{" "}
                 <th className="px-5 py-4">Slug</th>{" "}
@@ -225,3 +225,4 @@ export default function AdminTagsPage() {
     </div>
   );
 }
+

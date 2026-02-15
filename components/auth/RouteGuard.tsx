@@ -46,7 +46,7 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
           <div className="w-16 h-16 border-4 border-[rgb(var(--accent))]/20 border-t-blue-600 rounded-full animate-spin" />{" "}
           <Loader2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-[rgb(var(--accent))]" />{" "}
         </div>{" "}
-        <p className="mt-6 text-sm font-bold text-[rgb(var(--text-muted))] animate-pulse tracking-widest uppercase">
+        <p className="mt-6 text-sm font-bold text-[rgb(var(--text-muted))] animate-pulse tracking-wide uppercase">
           {" "}
           Verifying Identity{" "}
         </p>{" "}
@@ -56,3 +56,4 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
   return <>{children}</>;
 };
 export default RouteGuard;
+

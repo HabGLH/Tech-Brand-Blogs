@@ -51,10 +51,10 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative mb-10 rounded-3xl border border-[rgb(var(--accent-soft)/0.45)] bg-[rgb(var(--accent-soft)/0.18)] p-6 md:flex md:items-center md:justify-between">
           <div>
-            <p className="text-[11px] font-black uppercase tracking-widest text-[rgb(var(--accent))] mb-2">
+            <p className="text-[11px] font-bold uppercase tracking-wide text-[rgb(var(--accent))] mb-2">
               Community First Publishing
             </p>
-            <h3 className="text-2xl font-black text-[rgb(var(--text-primary))]">
+            <h3 className="text-2xl font-bold text-[rgb(var(--text-primary))]">
               Read, write, and grow with quality stories.
             </h3>
           </div>
@@ -150,3 +150,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

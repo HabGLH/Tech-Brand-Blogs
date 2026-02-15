@@ -161,10 +161,10 @@ export default function PostDetailPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
       <article className="mb-10 rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--surface))] p-6   sm:p-8">
-        <p className="mb-3 text-xs font-black uppercase tracking-widest text-[rgb(var(--accent))]">
+        <p className="mb-3 text-xs font-bold uppercase tracking-wide text-[rgb(var(--accent))]">
           {post.status}
         </p>
-        <h1 className="mb-4 text-4xl font-black text-[rgb(var(--text-primary))]">
+        <h1 className="mb-4 text-4xl font-bold text-[rgb(var(--text-primary))]">
           {post.title}
         </h1>
         <p className="mb-8 text-sm font-semibold text-[rgb(var(--text-muted))]">
@@ -242,3 +242,4 @@ export default function PostDetailPage() {
     </div>
   );
 }
+

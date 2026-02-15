@@ -89,7 +89,7 @@ export default function AdminOverview() {
         {" "}
         <div>
           {" "}
-          <h1 className="text-4xl font-black text-[rgb(var(--text-primary))] mb-2">
+          <h1 className="mb-2 text-3xl font-bold text-[rgb(var(--text-primary))] sm:text-4xl">
             Dashboard
           </h1>{" "}
           <p className="text-[rgb(var(--text-muted))] font-medium">
@@ -112,7 +112,7 @@ export default function AdminOverview() {
     return (
       <Card className="p-10 text-center">
         {" "}
-        <h1 className="text-2xl font-black text-[rgb(var(--text-primary))] mb-2">
+        <h1 className="text-2xl font-bold text-[rgb(var(--text-primary))] mb-2">
           Dashboard unavailable
         </h1>{" "}
         <p className="text-[rgb(var(--text-muted))] mb-5">
@@ -131,11 +131,11 @@ export default function AdminOverview() {
   return (
     <div className="space-y-10">
       {" "}
-      <div className="flex items-end justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         {" "}
         <div>
           {" "}
-          <h1 className="text-4xl font-black text-[rgb(var(--text-primary))] mb-2">
+          <h1 className="mb-2 text-3xl font-bold text-[rgb(var(--text-primary))] sm:text-4xl">
             Dashboard
           </h1>{" "}
           <p className="text-[rgb(var(--text-muted))] font-medium">
@@ -166,10 +166,10 @@ export default function AdminOverview() {
             </div>{" "}
             <div>
               {" "}
-              <p className="text-sm font-black text-[rgb(var(--text-muted)/0.8)] uppercase tracking-widest mb-1">
+              <p className="text-sm font-bold text-[rgb(var(--text-muted)/0.8)] uppercase tracking-wide mb-1">
                 {stat.label}
               </p>{" "}
-              <h3 className="text-3xl font-black text-[rgb(var(--text-primary))]">
+              <h3 className="text-3xl font-bold text-[rgb(var(--text-primary))]">
                 {stat.value}
               </h3>{" "}
               <p className="text-xs text-[rgb(var(--text-muted))] mt-2 font-semibold">
@@ -189,7 +189,7 @@ export default function AdminOverview() {
               {" "}
               <div className="flex items-center justify-between mb-2">
                 {" "}
-                <p className="text-xs font-black uppercase tracking-widest text-[rgb(var(--text-muted)/0.8)]">
+                <p className="text-xs font-bold uppercase tracking-wide text-[rgb(var(--text-muted)/0.8)]">
                   Published
                 </p>{" "}
                 <p className="text-sm font-bold text-[rgb(var(--text-primary)/0.86)] ">
@@ -210,7 +210,7 @@ export default function AdminOverview() {
               {" "}
               <div className="flex items-center justify-between mb-2">
                 {" "}
-                <p className="text-xs font-black uppercase tracking-widest text-[rgb(var(--text-muted)/0.8)]">
+                <p className="text-xs font-bold uppercase tracking-wide text-[rgb(var(--text-muted)/0.8)]">
                   Draft
                 </p>{" "}
                 <p className="text-sm font-bold text-[rgb(var(--text-primary)/0.86)] ">
@@ -231,28 +231,28 @@ export default function AdminOverview() {
               {" "}
               <div className="rounded-xl bg-[rgb(var(--surface-elevated))] p-4">
                 {" "}
-                <p className="text-[11px] uppercase tracking-widest text-[rgb(var(--text-muted)/0.8)] font-black mb-1">
+                <p className="text-[11px] uppercase tracking-wide text-[rgb(var(--text-muted)/0.8)] font-bold mb-1">
                   Active Users
                 </p>{" "}
-                <p className="text-2xl font-black text-[rgb(var(--text-primary))]">
+                <p className="text-2xl font-bold text-[rgb(var(--text-primary))]">
                   {overview.metrics.activeUsers}
                 </p>{" "}
               </div>{" "}
               <div className="rounded-xl bg-[rgb(var(--surface-elevated))] p-4">
                 {" "}
-                <p className="text-[11px] uppercase tracking-widest text-[rgb(var(--text-muted)/0.8)] font-black mb-1">
+                <p className="text-[11px] uppercase tracking-wide text-[rgb(var(--text-muted)/0.8)] font-bold mb-1">
                   Blocked Users
                 </p>{" "}
-                <p className="text-2xl font-black text-[rgb(var(--text-primary))]">
+                <p className="text-2xl font-bold text-[rgb(var(--text-primary))]">
                   {overview.metrics.blockedUsers}
                 </p>{" "}
               </div>{" "}
               <div className="rounded-xl bg-[rgb(var(--surface-elevated))] p-4">
                 {" "}
-                <p className="text-[11px] uppercase tracking-widest text-[rgb(var(--text-muted)/0.8)] font-black mb-1">
+                <p className="text-[11px] uppercase tracking-wide text-[rgb(var(--text-muted)/0.8)] font-bold mb-1">
                   Comments
                 </p>{" "}
-                <p className="text-2xl font-black text-[rgb(var(--text-primary))]">
+                <p className="text-2xl font-bold text-[rgb(var(--text-primary))]">
                   {overview.metrics.totalComments}
                 </p>{" "}
               </div>{" "}
@@ -352,7 +352,7 @@ export default function AdminOverview() {
       </Card>{" "}
       <div className="rounded-xl border border-[rgb(var(--accent-soft)/0.6)] bg-[rgb(var(--accent-soft)/0.18)] p-4 text-[rgb(var(--accent))] text-sm font-semibold   ">
         {" "}
-        <div className="mb-1 flex items-center gap-2 text-[11px] font-black uppercase tracking-widest">
+        <div className="mb-1 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wide">
           {" "}
           <Shield className="h-4 w-4" /> Admin Snapshot{" "}
         </div>{" "}
@@ -363,3 +363,4 @@ export default function AdminOverview() {
     </div>
   );
 } // Re-using layouts is handled by Next.js directory structure
+

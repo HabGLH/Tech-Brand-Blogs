@@ -69,7 +69,7 @@ export default function EditPostPage() {
   return (
     <div className="max-w-5xl mx-auto">
       <div className="mb-10">
-        <h1 className="text-4xl font-black text-[rgb(var(--text-primary))] mb-2">
+        <h1 className="text-4xl font-bold text-[rgb(var(--text-primary))] mb-2">
           Edit Story
         </h1>
         <p className="text-[rgb(var(--text-muted))] font-medium text-lg">
@@ -87,3 +87,4 @@ export default function EditPostPage() {
     </div>
   );
 }
+

@@ -35,7 +35,7 @@ export default function ForgotPasswordPage() {
       {" "}
       <Card>
         {" "}
-        <h1 className="text-3xl font-black text-[rgb(var(--text-primary))] mb-2">
+        <h1 className="text-3xl font-bold text-[rgb(var(--text-primary))] mb-2">
           Forgot Password
         </h1>{" "}
         <p className="text-[rgb(var(--text-muted))] mb-6">
@@ -73,3 +73,4 @@ export default function ForgotPasswordPage() {
     </div>
   );
 }
+

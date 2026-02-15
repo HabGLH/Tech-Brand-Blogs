@@ -43,7 +43,7 @@ export default function CreatePostPage() {
       {" "}
       <div className="mb-10">
         {" "}
-        <h1 className="text-4xl font-black text-[rgb(var(--text-primary))] mb-2">
+        <h1 className="text-4xl font-bold text-[rgb(var(--text-primary))] mb-2">
           Create New Story
         </h1>{" "}
         <p className="text-[rgb(var(--text-muted))] font-medium text-lg">
@@ -59,3 +59,4 @@ export default function CreatePostPage() {
     </div>
   );
 }
+

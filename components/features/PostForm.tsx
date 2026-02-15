@@ -238,7 +238,7 @@ const PostForm: React.FC<PostFormProps> = ({
             <div className="flex items-center gap-2 mb-2">
               {" "}
               <Sparkles className="w-4 h-4" />{" "}
-              <span className="text-xs font-black uppercase tracking-widest">
+              <span className="text-xs font-bold uppercase tracking-wide">
                 Writing Tip
               </span>{" "}
             </div>{" "}
@@ -254,3 +254,4 @@ const PostForm: React.FC<PostFormProps> = ({
   );
 };
 export default PostForm;
+

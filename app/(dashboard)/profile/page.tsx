@@ -59,7 +59,7 @@ export default function ProfilePage() {
       {" "}
       <div>
         {" "}
-        <h1 className="text-3xl font-black text-[rgb(var(--text-primary))]">
+        <h1 className="text-3xl font-bold text-[rgb(var(--text-primary))]">
           Profile Settings
         </h1>{" "}
         <p className="text-[rgb(var(--text-muted))]">
@@ -70,7 +70,7 @@ export default function ProfilePage() {
         {" "}
         <div className="flex items-center gap-4 mb-6">
           {" "}
-          <div className="h-16 w-16 rounded-2xl bg-[rgb(var(--primary))] text-[rgb(var(--on-primary))] flex items-center justify-center text-2xl font-black">
+          <div className="h-16 w-16 rounded-2xl bg-[rgb(var(--primary))] text-[rgb(var(--on-primary))] flex items-center justify-center text-2xl font-bold">
             {" "}
             {name?.[0]?.toUpperCase() || (
               <UserCircle2 className="h-8 w-8" />
@@ -200,3 +200,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+

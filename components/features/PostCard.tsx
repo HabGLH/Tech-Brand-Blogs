@@ -85,6 +85,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               src={post.imageUrl}
               alt={post.title}
               fill
+              unoptimized
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
@@ -109,7 +110,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       </Link>{" "}
       <div className="p-6 flex-1 flex flex-col">
         {" "}
-        <div className="flex items-center gap-3 mb-2 text-xs font-semibold text-[rgb(var(--text-muted))] uppercase tracking-widest">
+        <div className="flex items-center gap-3 mb-2 text-xs font-semibold text-[rgb(var(--text-muted))] uppercase tracking-wide">
           {" "}
           <span className="flex items-center gap-1.5">
             {" "}
@@ -130,7 +131,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         </Link>{" "}
         <Link href={`/posts/${post.slug}`} className="block">
           {" "}
-          <h3 className="text-xl font-black text-[rgb(var(--text-primary))] mb-2 line-clamp-2 group-hover:text-[rgb(var(--accent))] transition-colors leading-snug">
+          <h3 className="text-xl font-bold text-[rgb(var(--text-primary))] mb-2 line-clamp-2 group-hover:text-[rgb(var(--accent))] transition-colors leading-snug">
             {" "}
             {post.title}{" "}
           </h3>{" "}
@@ -176,3 +177,4 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   );
 };
 export default PostCard;
+

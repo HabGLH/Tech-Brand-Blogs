@@ -2,22 +2,23 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* Default mode choice: light (better readability with gold as primary CTA). */
-  --primary: 212 175 55; /* #D4AF37 */
-  --primary-strong: 184 147 35;
-  --secondary: 236 72 153; /* #EC4899 */
-  --secondary-soft: 249 168 212;
-  --accent: 37 99 235; /* #2563EB */
-  --accent-soft: 147 197 253;
+  --primary: 37 99 235;
+  --primary-strong: 30 64 175;
+  --secondary: 220 38 38;
+  --secondary-strong: 185 28 28;
+  --secondary-soft: 254 202 202;
+  --accent: 13 148 136;
+  --accent-soft: 153 246 228;
 
-  --background: 250 247 241;
+  --background: 248 250 252;
   --surface: 255 255 255;
-  --surface-elevated: 247 244 237;
-  --text-primary: 24 24 27;
-  --text-muted: 82 82 91;
-  --border: 228 223 212;
-  --on-primary: 18 18 18;
-  --ring: var(--accent);
+  --surface-elevated: 241 245 249;
+  --text-primary: 15 23 42;
+  --text-muted: 71 85 105;
+  --border: 203 213 225;
+  --on-primary: 255 255 255;
+  --on-danger: 255 255 255;
+  --ring: var(--primary);
 }
 
 @theme inline {
@@ -29,51 +30,68 @@
   --color-text-primary: rgb(var(--text-primary));
   --color-text-muted: rgb(var(--text-muted));
   --color-border: rgb(var(--border));
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-heading);
   --font-mono: var(--font-geist-mono);
 }
 
 html.dark {
-  --primary: 227 194 89;
-  --primary-strong: 212 175 55;
-  --secondary: 219 95 156;
-  --secondary-soft: 156 94 132;
-  --accent: 96 140 224;
-  --accent-soft: 88 112 163;
+  --primary: 96 165 250;
+  --primary-strong: 59 130 246;
+  --secondary: 248 113 113;
+  --secondary-strong: 239 68 68;
+  --secondary-soft: 127 29 29;
+  --accent: 45 212 191;
+  --accent-soft: 19 78 74;
 
-  --background: 12 18 31;
-  --surface: 22 30 48;
-  --surface-elevated: 31 40 61;
-  --text-primary: 241 245 249;
-  --text-muted: 165 180 204;
-  --border: 55 65 91;
-  --on-primary: 28 26 19;
-  --ring: var(--accent);
+  --background: 2 6 23;
+  --surface: 15 23 42;
+  --surface-elevated: 30 41 59;
+  --text-primary: 226 232 240;
+  --text-muted: 148 163 184;
+  --border: 51 65 85;
+  --on-primary: 2 6 23;
+  --on-danger: 2 6 23;
+  --ring: var(--primary);
 }
 
 @media (prefers-color-scheme: dark) {
   html:not(.light):not(.dark) {
-    --primary: 227 194 89;
-    --primary-strong: 212 175 55;
-    --secondary: 219 95 156;
-    --secondary-soft: 156 94 132;
-    --accent: 96 140 224;
-    --accent-soft: 88 112 163;
-    --background: 12 18 31;
-    --surface: 22 30 48;
-    --surface-elevated: 31 40 61;
-    --text-primary: 241 245 249;
-    --text-muted: 165 180 204;
-    --border: 55 65 91;
-    --on-primary: 28 26 19;
-    --ring: var(--accent);
+    --primary: 96 165 250;
+    --primary-strong: 59 130 246;
+    --secondary: 248 113 113;
+    --secondary-strong: 239 68 68;
+    --secondary-soft: 127 29 29;
+    --accent: 45 212 191;
+    --accent-soft: 19 78 74;
+    --background: 2 6 23;
+    --surface: 15 23 42;
+    --surface-elevated: 30 41 59;
+    --text-primary: 226 232 240;
+    --text-muted: 148 163 184;
+    --border: 51 65 85;
+    --on-primary: 2 6 23;
+    --on-danger: 2 6 23;
+    --ring: var(--primary);
   }
 }
 
 body {
   background: rgb(var(--background));
   color: rgb(var(--text-primary));
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), "Segoe UI", sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading), "Times New Roman", serif;
+  letter-spacing: -0.01em;
 }
 
 input,

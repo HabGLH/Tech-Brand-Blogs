@@ -36,7 +36,7 @@ export default function MyPostsPage() {
         {" "}
         <div>
           {" "}
-          <h1 className="text-3xl font-black text-[rgb(var(--text-primary))]">
+          <h1 className="text-3xl font-bold text-[rgb(var(--text-primary))]">
             My Posts
           </h1>{" "}
           <p className="text-[rgb(var(--text-muted))]">
@@ -54,11 +54,11 @@ export default function MyPostsPage() {
         {" "}
         <div className="overflow-x-auto">
           {" "}
-          <table className="w-full border-collapse text-left">
+          <table className="w-full min-w-[620px] border-collapse text-left">
             {" "}
             <thead>
               {" "}
-              <tr className="border-b border-[rgb(var(--border))] bg-[rgb(var(--surface-elevated))] text-[11px] font-black uppercase tracking-widest text-[rgb(var(--text-muted))] ">
+              <tr className="border-b border-[rgb(var(--border))] bg-[rgb(var(--surface-elevated))] text-[11px] font-bold uppercase tracking-wide text-[rgb(var(--text-muted))] ">
                 {" "}
                 <th className="px-5 py-4">Title</th>{" "}
                 <th className="px-5 py-4">Status</th>{" "}
@@ -148,3 +148,4 @@ export default function MyPostsPage() {
     </div>
   );
 }
+

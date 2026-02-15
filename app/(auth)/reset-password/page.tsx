@@ -45,7 +45,7 @@ function ResetPasswordContent() {
       {" "}
       <Card>
         {" "}
-        <h1 className="text-3xl font-black text-[rgb(var(--text-primary))] mb-2">
+        <h1 className="text-3xl font-bold text-[rgb(var(--text-primary))] mb-2">
           Reset Password
         </h1>{" "}
         <p className="text-[rgb(var(--text-muted))] mb-6">
@@ -115,3 +115,4 @@ export default function ResetPasswordPage() {
     </Suspense>
   );
 }
+

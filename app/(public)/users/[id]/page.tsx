@@ -50,11 +50,11 @@ export default function PublicUserProfilePage() {
       <Card>
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-start gap-4">
-            <div className="h-16 w-16 rounded-2xl bg-[rgb(var(--primary))] text-[rgb(var(--on-primary))] flex items-center justify-center text-2xl font-black">
+            <div className="h-16 w-16 rounded-2xl bg-[rgb(var(--primary))] text-[rgb(var(--on-primary))] flex items-center justify-center text-2xl font-bold">
               {user.name?.[0]?.toUpperCase() || "U"}
             </div>
             <div>
-              <h1 className="text-3xl font-black text-[rgb(var(--text-primary))]">
+              <h1 className="text-3xl font-bold text-[rgb(var(--text-primary))]">
                 {user.name}
               </h1>
               <p className="text-sm font-semibold text-[rgb(var(--text-muted))] capitalize">
@@ -116,3 +116,4 @@ export default function PublicUserProfilePage() {
     </div>
   );
 }
+

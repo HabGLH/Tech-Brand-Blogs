@@ -64,7 +64,7 @@ export default function RegisterPage() {
           {" "}
           <UserPlus className="w-8 h-8 text-[rgb(var(--accent))]" />{" "}
         </div>{" "}
-        <h2 className="text-3xl font-black text-[rgb(var(--text-primary))] mb-2">
+        <h2 className="text-3xl font-bold text-[rgb(var(--text-primary))] mb-2">
           {" "}
           Create account{" "}
         </h2>{" "}
@@ -157,7 +157,7 @@ export default function RegisterPage() {
               Already have an account?{" "}
               <Link
                 href="/login"
-                className="font-black text-[rgb(var(--accent))] hover:text-[rgb(var(--secondary))] transition-colors"
+                className="font-bold text-[rgb(var(--accent))] hover:text-[rgb(var(--secondary))] transition-colors"
               >
                 {" "}
                 Sign in instead{" "}
@@ -169,3 +169,4 @@ export default function RegisterPage() {
     </div>
   );
 }
+

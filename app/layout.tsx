@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Lora, Geist_Mono } from "next/font/google";
 import "../styles/globals.css";
 import RootLayoutWrapper from "./layout-wrapper";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const bodyFont = Plus_Jakarta_Sans({
+  variable: "--font-body",
+  subsets: ["latin"],
+});
+
+const headingFont = Lora({
+  variable: "--font-heading",
   subsets: ["latin"],
 });
 
@@ -28,7 +33,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${bodyFont.variable} ${headingFont.variable} ${geistMono.variable} antialiased`}
       >
         <RootLayoutWrapper>{children}</RootLayoutWrapper>
       </body>

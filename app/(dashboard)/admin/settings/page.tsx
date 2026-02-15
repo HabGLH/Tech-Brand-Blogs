@@ -92,7 +92,7 @@ export default function AdminSettingsPage() {
     return (
       <div className="space-y-8">
         {" "}
-        <h1 className="text-3xl font-black text-[rgb(var(--text-primary))]">
+        <h1 className="text-3xl font-bold text-[rgb(var(--text-primary))]">
           Site Settings
         </h1>{" "}
         <Card>
@@ -109,7 +109,7 @@ export default function AdminSettingsPage() {
       {" "}
       <div>
         {" "}
-        <h1 className="text-3xl font-black text-[rgb(var(--text-primary))]">
+        <h1 className="text-3xl font-bold text-[rgb(var(--text-primary))]">
           Site Settings
         </h1>{" "}
         <p className="text-[rgb(var(--text-muted))]">
@@ -301,3 +301,4 @@ export default function AdminSettingsPage() {
     </div>
   );
 }
+

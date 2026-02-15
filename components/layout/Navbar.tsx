@@ -59,6 +59,11 @@ const Navbar = () => {
     };
   }, [isMobileMenuOpen]);
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+    setIsProfileMenuOpen(false);
+  }, [pathname]);
+
   const handleLogout = async () => {
     try {
       await authService.logout();
@@ -93,7 +98,7 @@ const Navbar = () => {
             : "bg-transparent py-4"
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 sm:px-6 lg:px-8">
           <div className="md:hidden">
             <button
               type="button"
@@ -105,11 +110,11 @@ const Navbar = () => {
             </button>
           </div>
 
-          <Link href="/" className="group flex items-center gap-2">
+          <Link href="/" className="group flex min-w-0 items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[rgb(var(--primary))] text-[rgb(var(--on-primary))] shadow-lg shadow-[rgb(var(--primary)/0.3)]">
-              <span className="text-xl font-black">B</span>
+              <span className="text-xl font-bold">B</span>
             </div>
-            <span className="hidden bg-linear-to-r from-[rgb(var(--text-primary))] to-[rgb(var(--text-muted))] bg-clip-text text-2xl font-black tracking-tight text-transparent sm:block">
+            <span className="hidden bg-linear-to-r from-[rgb(var(--text-primary))] to-[rgb(var(--text-muted))] bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:block">
               Blogly
             </span>
           </Link>
@@ -135,13 +140,13 @@ const Navbar = () => {
               <button
                 type="button"
                 onClick={() => setIsProfileMenuOpen((prev) => !prev)}
-                className="flex items-center gap-2 rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-3 py-1.5 text-sm font-semibold text-[rgb(var(--text-primary))] transition-colors hover:border-[rgb(var(--accent-soft))] hover:text-[rgb(var(--accent))]"
+                className="flex items-center gap-2 rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-2.5 py-1.5 text-sm font-semibold text-[rgb(var(--text-primary))] transition-colors hover:border-[rgb(var(--accent-soft))] hover:text-[rgb(var(--accent))] sm:px-3"
               >
                 <UserCircle2 className="h-4 w-4" />
                 <span className="hidden max-w-24 truncate sm:block">
                   {user?.name ?? "Profile"}
                 </span>
-                <ChevronDown className="h-3.5 w-3.5" />
+                <ChevronDown className="hidden h-3.5 w-3.5 sm:block" />
               </button>
             ) : (
               <div className="flex items-center gap-2">
@@ -162,14 +167,14 @@ const Navbar = () => {
                     Log in
                   </Button>
                 </Link>
-                <Link href="/register">
+                <Link href="/register" className="hidden sm:block">
                   <Button size="sm">Get Started</Button>
                 </Link>
               </div>
             )}
 
             {isAuthenticated && isProfileMenuOpen && (
-              <div className="absolute right-0 top-12 min-w-72 rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--surface))] p-3 shadow-xl">
+              <div className="absolute right-0 top-12 w-[min(18rem,calc(100vw-1rem))] rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--surface))] p-3 shadow-xl">
                 <div className="mb-2 rounded-xl bg-[rgb(var(--surface-elevated))] p-3">
                   <p className="font-bold text-[rgb(var(--text-primary))]">
                     {user?.name}
@@ -256,13 +261,13 @@ const Navbar = () => {
             onClick={() => setIsMobileMenuOpen(false)}
           />
 
-          <aside className="absolute left-0 top-0 h-full w-80 max-w-[90%] border-r border-[rgb(var(--border))] bg-[rgb(var(--surface))] p-5 shadow-2xl">
+          <aside className="absolute left-0 top-0 h-full w-[86%] max-w-sm overflow-y-auto border-r border-[rgb(var(--border))] bg-[rgb(var(--surface))] p-4 shadow-2xl sm:p-5">
             <div className="mb-6 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[rgb(var(--primary))] font-black text-[rgb(var(--on-primary))]">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[rgb(var(--primary))] font-bold text-[rgb(var(--on-primary))]">
                   B
                 </div>
-                <span className="text-xl font-black text-[rgb(var(--text-primary))]">
+                <span className="text-xl font-bold text-[rgb(var(--text-primary))]">
                   Menu
                 </span>
               </div>
@@ -414,3 +419,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

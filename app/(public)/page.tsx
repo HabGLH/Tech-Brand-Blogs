@@ -77,12 +77,12 @@ export default function HomePage() {
             {" "}
             <Badge
               variant="info"
-              className="mb-6 px-4 py-1.5 uppercase tracking-widest text-[10px] font-black"
+              className="mb-6 px-4 py-1.5 uppercase tracking-wide text-[10px] font-bold"
             >
               {" "}
               {siteSettings.home.badge}{" "}
             </Badge>{" "}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-[rgb(var(--text-primary))] mb-6 tracking-tight leading-[1.05]">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-[rgb(var(--text-primary))] mb-6 tracking-tight leading-[1.05]">
               {" "}
               {siteSettings.home.title}{" "}
             </h1>{" "}
@@ -115,7 +115,7 @@ export default function HomePage() {
             {" "}
             <div className="rounded-3xl border border-[rgb(var(--border))] bg-[rgb(var(--surface))]/80 backdrop-blur p-6">
               {" "}
-              <p className="text-[11px] font-black uppercase tracking-widest text-[rgb(var(--text-muted)/0.8)] mb-4">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-[rgb(var(--text-muted)/0.8)] mb-4">
                 Today
               </p>{" "}
               <div className="space-y-3">
@@ -125,7 +125,7 @@ export default function HomePage() {
                   <span className="text-[rgb(var(--text-muted))]">
                     Published posts
                   </span>{" "}
-                  <span className="font-black text-[rgb(var(--text-primary))]">
+                  <span className="font-bold text-[rgb(var(--text-primary))]">
                     {posts.length}
                   </span>{" "}
                 </div>{" "}
@@ -134,7 +134,7 @@ export default function HomePage() {
                   <span className="text-[rgb(var(--text-muted))]">
                     Categories
                   </span>{" "}
-                  <span className="font-black text-[rgb(var(--text-primary))]">
+                  <span className="font-bold text-[rgb(var(--text-primary))]">
                     {categories.length}
                   </span>{" "}
                 </div>{" "}
@@ -143,7 +143,7 @@ export default function HomePage() {
                   <span className="text-[rgb(var(--text-muted))]">
                     Tags
                   </span>{" "}
-                  <span className="font-black text-[rgb(var(--text-primary))]">
+                  <span className="font-bold text-[rgb(var(--text-primary))]">
                     {tags.length}
                   </span>{" "}
                 </div>{" "}
@@ -220,7 +220,7 @@ export default function HomePage() {
         <div className="flex items-center gap-2 mb-10">
           {" "}
           <Zap className="w-5 h-5 text-[rgb(var(--accent))] fill-[rgb(var(--accent))]" />{" "}
-          <h2 className="text-2xl font-black text-[rgb(var(--text-primary))]">
+          <h2 className="text-2xl font-bold text-[rgb(var(--text-primary))]">
             Latest Stories
           </h2>{" "}
         </div>{" "}
@@ -270,3 +270,4 @@ export default function HomePage() {
     </div>
   );
 }
+

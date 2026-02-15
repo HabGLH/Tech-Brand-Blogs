@@ -59,7 +59,7 @@ export default function PostsPage() {
       {" "}
       <section className="py-12">
         {" "}
-        <h1 className="mb-2 text-4xl font-black text-[rgb(var(--text-primary))]">
+        <h1 className="mb-2 text-4xl font-bold text-[rgb(var(--text-primary))]">
           Posts
         </h1>{" "}
         <p className="text-[rgb(var(--text-muted))]">
@@ -153,3 +153,4 @@ export default function PostsPage() {
     </div>
   );
 }
+

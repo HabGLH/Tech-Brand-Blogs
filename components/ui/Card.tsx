@@ -36,7 +36,7 @@ const Card: React.FC<CardProps> = ({
       `}
     >
       {title && (
-        <h3 className="text-lg font-black text-[rgb(var(--text-primary))] mb-4">
+        <h3 className="text-lg font-bold text-[rgb(var(--text-primary))] mb-4">
           {title}
         </h3>
       )}
@@ -46,3 +46,4 @@ const Card: React.FC<CardProps> = ({
 };
 
 export default Card;
+

@@ -56,7 +56,7 @@ export default function LoginPage() {
       {" "}
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         {" "}
-        <h2 className="text-3xl font-black text-[rgb(var(--text-primary))] mb-2">
+        <h2 className="text-3xl font-bold text-[rgb(var(--text-primary))] mb-2">
           {" "}
           Welcome back{" "}
         </h2>{" "}
@@ -125,7 +125,7 @@ export default function LoginPage() {
               Don&apos;t have an account?{" "}
               <Link
                 href="/register"
-                className="font-black text-[rgb(var(--accent))] hover:text-[rgb(var(--secondary))] transition-colors"
+                className="font-bold text-[rgb(var(--accent))] hover:text-[rgb(var(--secondary))] transition-colors"
               >
                 {" "}
                 Sign up for free{" "}
@@ -137,3 +137,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

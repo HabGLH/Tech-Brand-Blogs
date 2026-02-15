@@ -54,7 +54,7 @@ export default function PostManagement() {
         {" "}
         <div>
           {" "}
-          <h1 className="text-3xl font-black text-[rgb(var(--text-primary))] mb-1">
+          <h1 className="text-3xl font-bold text-[rgb(var(--text-primary))] mb-1">
             My Stories
           </h1>{" "}
           <p className="text-[rgb(var(--text-muted))] font-medium">
@@ -92,11 +92,11 @@ export default function PostManagement() {
         </div>{" "}
         <div className="overflow-x-auto">
           {" "}
-          <table className="w-full text-left border-collapse">
+          <table className="w-full min-w-[760px] border-collapse text-left">
             {" "}
             <thead>
               {" "}
-              <tr className="bg-[rgb(var(--surface-elevated))]/50 text-[rgb(var(--text-muted))] uppercase text-[10px] font-black tracking-widest border-b border-[rgb(var(--border))]">
+              <tr className="bg-[rgb(var(--surface-elevated))]/50 text-[rgb(var(--text-muted))] uppercase text-[10px] font-bold tracking-wide border-b border-[rgb(var(--border))]">
                 {" "}
                 <th className="px-6 py-4">Title</th>{" "}
                 <th className="px-6 py-4">Status</th>{" "}
@@ -223,3 +223,4 @@ export default function PostManagement() {
     </div>
   );
 }
+
