@@ -294,8 +294,10 @@ async function seed() {
     let totalComments = 0;
 
     for (const post of createdPosts) {
-      // Add random likes (2 to 12 likes per post)
-      const numLikes = Math.floor(Math.random() * 11) + 2;
+      // Add random likes (2 to min(createdUsers.length, 8) likes per post)
+      const maxLikes = Math.min(createdUsers.length, 8);
+      const minLikes = Math.min(2, maxLikes);
+      const numLikes = Math.floor(Math.random() * (maxLikes - minLikes + 1)) + minLikes;
       const shuffledUsers = [...createdUsers].sort(() => 0.5 - Math.random());
 
       for (let j = 0; j < numLikes; j++) {
