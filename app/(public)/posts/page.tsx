@@ -19,14 +19,26 @@ export default function PostsPage() {
     const load = async () => {
       setLoading(true);
       try {
-        const [postRes, categoryRes, tagRes] = await Promise.all([
+        const [postRes, categoryRes, tagRes] = await Promise.allSettled([
           postService.getAll({ status: "published", limit: 100 }),
           metadataService.getCategories(),
           metadataService.getTags(),
         ]);
-        setPosts(postRes.data.posts || []);
-        setCategories(categoryRes.data.categories || []);
-        setTags(tagRes.data.tags || []);
+        if (postRes.status === "fulfilled") {
+          setPosts(postRes.value.data.posts || []);
+        } else {
+          console.error("Failed to load posts", postRes.reason);
+        }
+        if (categoryRes.status === "fulfilled") {
+          setCategories(categoryRes.value.data.categories || []);
+        } else {
+          console.error("Failed to load categories", categoryRes.reason);
+        }
+        if (tagRes.status === "fulfilled") {
+          setTags(tagRes.value.data.tags || []);
+        } else {
+          console.error("Failed to load tags", tagRes.reason);
+        }
       } finally {
         setLoading(false);
       }
@@ -153,4 +165,3 @@ export default function PostsPage() {
     </div>
   );
 }
-

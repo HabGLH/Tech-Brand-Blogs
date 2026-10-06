@@ -25,16 +25,34 @@ export default function HomePage() {
     const init = async () => {
       setLoading(true);
       try {
-        const [postRes, catRes, tagRes, settingsRes] = await Promise.all([
-          postService.getAll({ status: "published" }),
-          metadataService.getCategories(),
-          metadataService.getTags(),
-          siteSettingsService.getSettings(),
-        ]);
-        setPosts(postRes.data.posts);
-        setCategories(catRes.data.categories);
-        setTags(tagRes.data.tags || []);
-        setSiteSettings(settingsRes.data.settings);
+        const [postRes, catRes, tagRes, settingsRes] = await Promise.allSettled(
+          [
+            postService.getAll({ status: "published" }),
+            metadataService.getCategories(),
+            metadataService.getTags(),
+            siteSettingsService.getSettings(),
+          ],
+        );
+        if (postRes.status === "fulfilled") {
+          setPosts(postRes.value.data.posts || []);
+        } else {
+          console.error("Failed to load posts", postRes.reason);
+        }
+        if (catRes.status === "fulfilled") {
+          setCategories(catRes.value.data.categories || []);
+        } else {
+          console.error("Failed to load categories", catRes.reason);
+        }
+        if (tagRes.status === "fulfilled") {
+          setTags(tagRes.value.data.tags || []);
+        } else {
+          console.error("Failed to load tags", tagRes.reason);
+        }
+        if (settingsRes.status === "fulfilled") {
+          setSiteSettings(settingsRes.value.data.settings);
+        } else {
+          console.error("Failed to load site settings", settingsRes.reason);
+        }
       } catch (err) {
         console.error("Home initialization failed", err);
       } finally {
@@ -270,4 +288,3 @@ export default function HomePage() {
     </div>
   );
 }
-
