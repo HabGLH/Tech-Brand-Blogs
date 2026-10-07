@@ -56,7 +56,7 @@ const PostForm: React.FC<PostFormProps> = ({
           ),
           status: initialData.status,
         }
-      : { status: "draft", tagIds: [] },
+      : { status: "published", tagIds: [] },
   });
   const selectedStatus = useWatch({ control, name: "status" });
   return (
@@ -254,4 +254,3 @@ const PostForm: React.FC<PostFormProps> = ({
   );
 };
 export default PostForm;
-
