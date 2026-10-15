@@ -2,6 +2,10 @@ import Post from "@/models/Post";
 import User from "@/models/User";
 import Like from "@/models/Like";
 import requireAuth from "@/lib/middleware/authe";
+
+// Ensure related models are registered with mongoose so populate() works
+import "@/models/Category";
+import "@/models/Tag";
 import { getUserFromRequest } from "@/lib/auth";
 import { slugify } from "@/lib/utils";
 import { ok, error } from "@/lib/api";
