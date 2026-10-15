@@ -58,7 +58,7 @@ export default function MyPostsPage() {
             {" "}
             <thead>
               {" "}
-              <tr className="border-b border-[rgb(var(--border))] bg-[rgb(var(--surface-elevated))] text-[11px] font-bold uppercase tracking-wide text-[rgb(var(--text-muted))] ">
+              <tr className="border-b border-[rgb(var(--border))] bg-[rgb(var(--surface-elevated))] text-[11px] font-bold uppercase tracking-wide text-[rgb(var(--text-muted))]">
                 {" "}
                 <th className="px-5 py-4">Title</th>{" "}
                 <th className="px-5 py-4">Status</th>{" "}
